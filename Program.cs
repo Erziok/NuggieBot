@@ -2,7 +2,7 @@
 using Discord.Commands;
 using Discord.WebSocket;
 using Microsoft.Extensions.DependencyInjection;
-using NuggieBot;
+using NuggieBot.Commands.Handler;
 
 namespace NuggieBot
 {
@@ -10,9 +10,9 @@ namespace NuggieBot
     {
         public static void Main(string[] args) => new MainClass().MainAsync().GetAwaiter().GetResult();
 
-        private DiscordSocketClient _client;
-        private static CommandService _commands;
-        private CommandHandler _commandHandler;
+        private DiscordSocketClient? _client;
+        private static CommandService? _commands;
+        private CommandHandler? _commandHandler;
 
         public async Task MainAsync()
         {
@@ -23,6 +23,9 @@ namespace NuggieBot
                                | GatewayIntents.GuildMessages
                                | GatewayIntents.MessageContent
                                | GatewayIntents.GuildMembers 
+                               | GatewayIntents.GuildWebhooks
+                               | GatewayIntents.GuildEmojis,
+                AlwaysDownloadUsers = true
             };
 
             _client = new DiscordSocketClient(config); // Make sure to put the config here
@@ -40,7 +43,7 @@ namespace NuggieBot
             // Uses the token to start the bot
             await _client.LoginAsync(TokenType.Bot, token);
             await _client.StartAsync();
-            await _client.SetGameAsync("n!ping");
+            await _client.SetGameAsync("n!help");
 
             await Task.Delay(-1);
         }
